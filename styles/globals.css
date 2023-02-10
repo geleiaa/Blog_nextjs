@@ -4,6 +4,8 @@ body {
   margin: 0;
   font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  line-height: 1.6;
+  font-size: 18px;  
 }
 
 a {
@@ -35,4 +37,8 @@ ul {
 button {
   padding: 0.5rem 1rem;
   font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
 }
