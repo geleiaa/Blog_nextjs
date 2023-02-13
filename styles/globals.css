@@ -6,6 +6,7 @@ body {
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   line-height: 1.6;
   font-size: 18px;  
+  background-color: #1b3858;
 }
 
 a {
@@ -26,6 +27,7 @@ h1,
 h2,
 p,
 ul {
+  color: #e6f1fc;
   margin: 0;
 }
 

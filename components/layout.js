@@ -6,7 +6,7 @@ import styles from './layout.module.css';
 
 
 const name = 'Geleia';
-export const siteTitle = 'Next.js Blog';  
+export const siteTitle = 'Blog do Geleia';  
 
 export default function Layout({ children, home }) {
     return (
@@ -15,7 +15,7 @@ export default function Layout({ children, home }) {
           <link rel="icon" href="/favicon.ico" />
           <meta
             name="description"
-            content="Learn how to build a personal website using Next.js"
+            content="personal website using Next.js"
           />
           <meta
             property="og:image"
@@ -31,10 +31,10 @@ export default function Layout({ children, home }) {
             <>
               <Image
                 priority
-                src="/images/profile.jpg"
+                src="/images/profile.png"
                 className={utilStyles.borderCircle}
-                height={144}
-                width={144}
+                height={85}
+                width={85}
                 alt=""
               />
               <h1 className={utilStyles.heading2Xl}>{name}</h1>
