@@ -5,7 +5,7 @@ import Link from 'next/link';
 import styles from './layout.module.css';
 
 
-const name = 'Geleia';
+const name = 'Bem vindo ao blog! :)';
 export const siteTitle = 'Blog do Geleia';  
 
 export default function Layout({ children, home }) {
@@ -14,7 +14,7 @@ export default function Layout({ children, home }) {
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <meta
-            name="description"
+            name="blog do geleia"
             content="personal website using Next.js"
           />
           <meta
@@ -37,14 +37,14 @@ export default function Layout({ children, home }) {
                 width={85}
                 alt=""
               />
-              <h1 className={utilStyles.heading2Xl}>{name}</h1>
+              <h2 className={utilStyles.heading2Xl}>{name}</h2>
             </>
           ) : (
             <>
               <Link href="/">
                 <Image
                   priority
-                  src="/images/profile.jpg"
+                  src="/images/profile.png"
                   className={utilStyles.borderCircle}
                   height={90}
                   width={90}

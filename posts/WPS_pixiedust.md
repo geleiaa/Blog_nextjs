@@ -1,6 +1,7 @@
 ---
 title: 'pixie-dust attack'
 date: '2022-09-18'
+description: 'Nesse artigo faço um pequena demonstração de como exlporar uma falha do protocolo WPS de roteadores'
 ---
 
 
@@ -14,14 +15,14 @@ A vulnerabilidade está na mensagem M3: no corpo da mensagem é utilizado
 duas chaves AES de 128 bits randômicas (E-S1 e E-S2) para encriptação da
 primeira e da segunda metade do PIN, respectivamente. Se as duas chaves
 forem descobertas, é possível recuperar o número PIN com um ataque offline
-em menos de um segundo, em vez de “chutar” o número PIN no roteador, processo que pode levar 
-de 8 a 12 horas (mais informações sobre o brute-force offline aqui http://archive.hack.lu/2014/Hacklu2014_offline_bruteforce_attack_on_wps.pdf)
+em menos de um segundo, em vez de “chutar” o número PIN no roteador, processo que pode levar de 8 a 12 horas (mais informações sobre o brute-force offline aqui [Hacklu2014_offline_bruteforce_attack_on_wps.pdf](http://archive.hack.lu/2014/Hacklu2014_offline_bruteforce_attack_on_wps.pdf)
 
 
 ## Parte pratica
 ##### Com a interface em modo monitor você pode "sniffar" as redes em volta para identificar um alvo em potêncial com o airodump-ng adicionando a flag --wps dessa forma:
 ```
 $ sudo airodump-ng --wps <interface>
+
 ```
 > Repare na coluna WPS 
 

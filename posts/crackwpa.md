@@ -1,6 +1,7 @@
 ---
 title: 'crack wpa'
 date: '2022-10-07'
+description: 'Esse é um passo a passo que geralmente uso para capturar um HANDSHAKE do protocolo de autenticação WPA e depois fazer um brute-force'
 ---
 
 
