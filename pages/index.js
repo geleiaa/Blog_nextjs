@@ -35,13 +35,13 @@ export default function Home({ allPostsData }) {
             src="/images/github-mark-white.svg"
             className={utilStyles.borderCircle}
             height={20}
-            width={20} /><a href="https://github.com/geleiaa" target="_blank">Github</a>
+            width={20} />&nbsp;<a href="https://github.com/geleiaa" target="_blank">Github</a>
             &nbsp;&nbsp;&nbsp;&nbsp;
           <Image
             src="/images/In-White-21.png"
             className={utilStyles.borderCircle}
             height={20}
-            width={20} /><a href="https://www.linkedin.com/in/guilherme-ferreira-48b135247/" target="_blank">Linkedin</a>
+            width={20} />&nbsp;<a href="https://www.linkedin.com/in/guilherme-ferreira-48b135247/" target="_blank">Linkedin</a>
         </p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>

