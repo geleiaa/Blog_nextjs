@@ -219,7 +219,7 @@ ________________________________________________________________________________
  
  (os pacotes m1 até m4 precisam ser capturados)
  
- mais sobre informações aqui: (https://community.cisco.com/t5/wireless-mobility-knowledge-base/802-11-sniffer-capture-analysis-wpa-wpa2-with-psk-or-eap/ta-p/3116990)
+ mais sobre informações **[aqui](https://community.cisco.com/t5/wireless-mobility-knowledge-base/802-11-sniffer-capture-analysis-wpa-wpa2-with-psk-or-eap/ta-p/3116990)** ...
  
  
  Depois do HANDSHAKE capturado há algumas formas de extrair só a parte que interessa. Uma delas é com uma ferramenta WPAPCAP2JOHN do pacote John The Ripper.
