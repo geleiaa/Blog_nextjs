@@ -44,3 +44,15 @@ button {
 a:hover {
   text-decoration: underline;
 }
+
+footer {
+  position: relative;
+  width: 100%;
+  background: #1b3858;
+  min-height: 100px;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}

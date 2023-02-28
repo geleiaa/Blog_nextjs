@@ -6,65 +6,72 @@ import styles from './layout.module.css';
 
 
 const name = 'Bem vindo ao blog! :)';
-export const siteTitle = 'Blog do Geleia';  
+export const siteTitle = 'Blog do Geleia';
 
 export default function Layout({ children, home }) {
-    return (
-      <div className={styles.container}>
-        <Head>
-          <link rel="icon" href="/favicon.ico" />
-          <meta
-            name="blog do geleia"
-            content="personal website using Next.js"
-          />
-          <meta
-            property="og:image"
-            content={`https://og-image.vercel.app/${encodeURI(
-              siteTitle,
-            )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-          />
-          <meta name="og:title" content={siteTitle} />
-          <meta name="twitter:card" content="summary_large_image" />
-        </Head>
-        <header className={styles.header}>
-          {home ? (
-            <>
+  return (
+    <div className={styles.container}>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="blog do geleia"
+          content="personal website using Next.js"
+        />
+        <meta
+          property="og:image"
+          content={`https://og-image.vercel.app/${encodeURI(
+            siteTitle,
+          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
+        />
+        <meta name="og:title" content={siteTitle} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
+      <header className={styles.header}>
+        {home ? (
+          <>
+            <Image
+              priority
+              src="/images/profile.jpg"
+              className={utilStyles.borderCircle}
+              height={450}
+              width={450}
+              alt=""
+            />
+            <h2 className={utilStyles.heading2Xl}>{name}</h2>
+          </>
+        ) : (
+          <>
+            <Link href="/">
               <Image
                 priority
-                src="/images/profile.png"
+                src="/images/profile.jpg"
                 className={utilStyles.borderCircle}
-                height={85}
-                width={85}
+                height={450}
+                width={450}
                 alt=""
               />
-              <h2 className={utilStyles.heading2Xl}>{name}</h2>
-            </>
-          ) : (
-            <>
-              <Link href="/">
-                <Image
-                  priority
-                  src="/images/profile.png"
-                  className={utilStyles.borderCircle}
-                  height={90}
-                  width={90}
-                  alt=""
-                />
+            </Link>
+            <h2 className={utilStyles.headingLg}>
+              <Link href="/" className={utilStyles.colorInherit}>
+                {name}
               </Link>
-              <h2 className={utilStyles.headingLg}>
-                <Link href="/" className={utilStyles.colorInherit}>
-                  {name}
-                </Link>
-              </h2>
-            </>
-          )}
-        </header>
-        <main>{children}</main>
-        {!home && (
-          <div className={styles.backToHome}>
-            <Link href="/">← Back to home</Link>
-          </div>
+            </h2>
+          </>
         )}
-      </div>
-    );
-  }
+      </header>
+      <main>{children}</main>
+      {!home && (
+        <div className={styles.backToHome}>
+          <Link href="/">← Back to home</Link>
+        </div>
+      )}
+      <footer>
+          <Image
+            src="/images/github-mark-white.svg"
+            className={utilStyles.borderCircle}
+            height={20}
+            width={20} />&nbsp;<p><a href='https://github.com/geleiaa/Blog_nextjs' target="_blank">repo do projeto</a></p>
+      </footer>
+    </div>
+  );
+}
