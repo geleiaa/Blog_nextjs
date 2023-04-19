@@ -13,6 +13,7 @@ texto original: https://github.com/geleiaa/wirelesssss/blob/main/WPS_pixiedust.m
 #### A vulnerabilidade está na mensagem M3: no corpo da mensagem é utilizado duas chaves AES de 128 bits randômicas (E-S1 e E-S2) para encriptação da primeira e da segunda metade do PIN, respectivamente. Se as duas chaves forem descobertas, é possível recuperar o número PIN com um ataque offline em menos de um segundo, em vez de “chutar” o número PIN no roteador, processo que pode levar de 8 a 12 horas (mais informações sobre o brute-force offline aqui: [Hacklu2014_offline_bruteforce_attack_on_wps.pdf](http://archive.hack.lu/2014/Hacklu2014_offline_bruteforce_attack_on_wps.pdf)
 
 >___
+
 ## Parte pratica
 Com a interface em modo monitor você pode "sniffar" as redes em volta para identificar um alvo em potêncial, usando o airodump-ng adicionando a flag **--wps** dessa forma:
 
@@ -42,6 +43,7 @@ Com a interface em modo monitor você pode "sniffar" as redes em volta para iden
 Os APs com o WPS ativado vão aparecer nessa coluna junto com a versão do wps que o AP possui. Quando o wps está desativado essa coluna ficara vazia.
 
 >___
+
 Depois de ter identificado seu alvo, a ferramenta para fazer o ataque foi a *Reaver* (link no final da pg) com o seguinte comando:
   
 
@@ -97,32 +99,34 @@ db396a9e4066be20697a0e236d3aaef7 -r
 (você pode executar o comando "pixiewps" sugerido pela própria ferramenta, que o resultado trará o mesmo pin recuperado)
 
 >___
+
 Dependendo do resultado do ataque, o reaver consegue recuperar apenas o PIN do WPS como mostrado acima. Nos meus testes foi esse resultado que consegui, então a idéia é essa: *recuperar o PIN com o ataque offline pixie-dust, depois se conectar ao AP com o pin recuperado usando o passo a passo abaixo, para depois pegar o psk*, vam bora!!!
 
-***
+>___
+
 #### 1. Crie o arquivo com o nome *wpa_supplicant.conf* no diretório */etc/* e nesse arquivo vão as seguintes linhas:
 
-
-> ctrl_interface=/var/run/wpa_supplicant
->  
-> ctrl_interface_group=0
->  
-> update_config=1
+```bash
+ctrl_interface=/var/run/wpa_supplicant
   
+ctrl_interface_group=0
+
+update_config=1
+```  
 
 #### 2. Inicie o wpa_supplicant, com o arquivo de configuração */etc/wpa_supplicant.conf* com o seguinte comando:
-  
-> $ wpa_supplicant -Dwext -iwlan0 -c /etc/wpa_supplicant.conf
 
+```bash
+$ wpa_supplicant -Dwext -iwlan0 -c /etc/wpa_supplicant.conf
+```
 
   
 #### 3. Em outro terminal inicie o *wpa_cli* para realizar a conexão ao AP por meio do número PIN com o seguinte comando:
 
-> $ wpa_cli wps_reg 74:EA:3A:E1:E8:66 02283470
-
-                         ^                ^
-                         |                |
->                    (mac do ap)     (pin wps)
+```bash
+$ wpa_cli wps_reg 74:EA:3A:E1:E8:66 02283470
+                    (mac do ap)     (pin wps)
+```
 
   
   
